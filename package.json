@@ -1,0 +1,30 @@
+{
+    "name": "rx-wet",
+    "version": "1.0.0",
+    "description": "Watery RxJs experiments",
+    "main": "index.js",
+    "scripts": {
+        "start": "npx parcel index.html",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/jjaanila/rx-wet.git"
+    },
+    "keywords": [
+        "RxJs"
+    ],
+    "author": "Janne Jaanila",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/jjaanila/rx-wet/issues"
+    },
+    "homepage": "https://github.com/jjaanila/rx-wet#readme",
+    "devDependencies": {
+        "parcel-bundler": "^1.12.4",
+        "typescript": "^4.0.3"
+    },
+    "dependencies": {
+        "rxjs": "^6.6.3"
+    }
+}
