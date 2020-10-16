@@ -1,23 +1,23 @@
 import { XYCoordinates } from "./coordinates";
 
-const PIPE_WIDTH_PX = 20;
-const PIPE_HEIGHT_PX = 60;
-
-export class Pipe {
-    private color = "red";
+export class Tile {
+    private color = "black";
     private rotationDegrees = 0;
     private transformationMatrix: DOMMatrix;
-    public width = PIPE_WIDTH_PX;
-    public height = PIPE_HEIGHT_PX;
+    public pipeLength: number;
+    public pipeDiameter: number;
 
-    constructor(public pos: XYCoordinates) {}
+    constructor(public pos: XYCoordinates, private tileWidth: number, private tileHeight: number) {
+        this.pipeLength = tileWidth * 0.2;
+        this.pipeDiameter = tileHeight;
+    }
 
-    getCenter = (): XYCoordinates => {
+    private get tileCenter() {
         return {
-            x: this.pos.x + this.width / 2,
-            y: this.pos.y + this.height / 2,
+            x: this.pos.x + this.tileWidth / 2,
+            y: this.pos.y + this.tileHeight / 2,
         };
-    };
+    }
 
     /*
     Neat collision detection: https://stackoverflow.com/questions/41469794/html-canvas-and-javascript-rotating-objects-with-collision-detection
@@ -27,10 +27,10 @@ export class Pipe {
         const posInPipeCoordinateSpace = new DOMPoint(pos.x, pos.y);
         const relativeClickPos = inverseTransformationMatrixOfPipe.transformPoint(posInPipeCoordinateSpace);
         return (
-            relativeClickPos.x > -this.width / 2 &&
-            relativeClickPos.y > -this.height / 2 &&
-            relativeClickPos.x < this.width / 2 &&
-            relativeClickPos.y < this.height / 2
+            relativeClickPos.x > -this.pipeLength / 2 &&
+            relativeClickPos.y > -this.pipeDiameter / 2 &&
+            relativeClickPos.x < this.pipeLength / 2 &&
+            relativeClickPos.y < this.pipeDiameter / 2
         );
     };
 
@@ -51,12 +51,15 @@ export class Pipe {
     };
 
     draw = (context: CanvasRenderingContext2D) => {
+        // Draw background
+        context.fillStyle = "gray";
+        context.fillRect(this.pos.x, this.pos.y, this.tileWidth, this.tileHeight);
+
         // Store the current context state (i.e. rotation, translation etc..)
         context.save();
 
         // Set the origin to the center of the image
-        const center = this.getCenter();
-        context.translate(center.x, center.y);
+        context.translate(this.tileCenter.x, this.tileCenter.y);
 
         // Convert degrees to radian
         const rad = (this.rotationDegrees * Math.PI) / 180;
@@ -65,7 +68,7 @@ export class Pipe {
         context.rotate(-rad);
 
         context.fillStyle = this.color;
-        context.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
+        context.fillRect(-this.pipeLength / 2, -this.pipeDiameter / 2, this.pipeLength, this.pipeDiameter);
 
         this.transformationMatrix = context.getTransform();
 
