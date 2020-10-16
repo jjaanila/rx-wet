@@ -13,12 +13,12 @@ export class Game {
         width: number;
         height: number;
     };
-    private tilemap: any[][] = [];
+    private tilemap: Tile[][] = [];
 
     constructor() {
         this.updateCanvasSize();
         this.context = this.canvas.getContext("2d");
-        this.createTilemap();
+        this.tilemap = this.createTilemap();
         document.body.insertBefore(this.canvas, document.getElementById("main"));
         fromEvent(window, "resize").subscribe(this.updateCanvasSize);
         fromEvent(this.canvas, "click").subscribe(this.onCanvasClick);
@@ -34,10 +34,11 @@ export class Game {
     };
 
     private createTilemap = () => {
+        const tilemap: Tile[][] = [];
         [...Array(this.numberOfHorizontalTiles)].map((_, horizontalIndex) => {
-            this.tilemap[horizontalIndex] = [];
+            tilemap[horizontalIndex] = [];
             [...Array(this.numberOfVerticalTiles)].map((_, verticalIndex) => {
-                this.tilemap[horizontalIndex][verticalIndex] = new Tile(
+                tilemap[horizontalIndex][verticalIndex] = new Tile(
                     {
                         x: horizontalIndex * this.tileSize.width,
                         y: verticalIndex * this.tileSize.height,
@@ -47,6 +48,7 @@ export class Game {
                 );
             });
         });
+        return tilemap;
     };
 
     private onCanvasClick = (event: MouseEvent) => {
