@@ -19,18 +19,12 @@ export class Tile {
         };
     }
 
-    /*
-    Neat collision detection: https://stackoverflow.com/questions/41469794/html-canvas-and-javascript-rotating-objects-with-collision-detection
-    */
     contains = (pos: XYCoordinates): boolean => {
-        const inverseTransformationMatrixOfPipe = this.transformationMatrix.invertSelf();
-        const posInPipeCoordinateSpace = new DOMPoint(pos.x, pos.y);
-        const relativeClickPos = inverseTransformationMatrixOfPipe.transformPoint(posInPipeCoordinateSpace);
         return (
-            relativeClickPos.x > -this.pipeLength / 2 &&
-            relativeClickPos.y > -this.pipeDiameter / 2 &&
-            relativeClickPos.x < this.pipeLength / 2 &&
-            relativeClickPos.y < this.pipeDiameter / 2
+            pos.x > this.pos.x &&
+            pos.x < this.pos.x + this.tileWidth &&
+            pos.y > this.pos.y &&
+            pos.y < this.pos.y + this.tileHeight
         );
     };
 
