@@ -3,7 +3,6 @@ import { XYCoordinates } from "./coordinates";
 export class Tile {
     private color = "black";
     private rotationDegrees = 0;
-    private transformationMatrix: DOMMatrix;
     public pipeLength: number;
     public pipeDiameter: number;
 
@@ -56,15 +55,13 @@ export class Tile {
         context.translate(this.tileCenter.x, this.tileCenter.y);
 
         // Convert degrees to radian
-        const rad = (this.rotationDegrees * Math.PI) / 180;
+        const rotationRad = (this.rotationDegrees * Math.PI) / 180;
 
         // Rotate the canvas around the origin
-        context.rotate(-rad);
+        context.rotate(-rotationRad);
 
         context.fillStyle = this.color;
         context.fillRect(-this.pipeLength / 2, -this.pipeDiameter / 2, this.pipeLength, this.pipeDiameter);
-
-        this.transformationMatrix = context.getTransform();
 
         // Restore canvas state as saved from above
         context.restore();
