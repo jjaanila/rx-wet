@@ -1,4 +1,5 @@
 import { fromEvent } from "rxjs";
+import { XYCoordinates } from "./coordinates";
 import { Pipe } from "./Pipe";
 import { getNewRandomPlumbing } from "./plumber";
 
@@ -24,11 +25,13 @@ export class Game {
 
     private onCanvasClick = (event: MouseEvent) => {
         const canvasRect = this.canvas.getBoundingClientRect();
-        const x = event.clientX - canvasRect.left;
-        const y = event.clientY - canvasRect.top;
+        const clickCoordinates = {
+            x: event.clientX - canvasRect.left,
+            y: event.clientY - canvasRect.top,
+        } as XYCoordinates;
         this.plumbing.forEach((layer) =>
             layer.forEach((pipe) => {
-                if (y > pipe.pos.y && y < pipe.pos.y + pipe.height && x > pipe.pos.x && x < pipe.pos.x + pipe.width) {
+                if (pipe.contains(clickCoordinates)) {
                     pipe.onClick();
                 }
             })
@@ -37,7 +40,7 @@ export class Game {
 
     private update = () => {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.plumbing.forEach((layer) => layer.forEach((pipe) => pipe.update(this.context)));
+        this.plumbing.forEach((layer) => layer.forEach((pipe) => pipe.draw(this.context)));
     };
 
     start = () => {
