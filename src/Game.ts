@@ -1,5 +1,6 @@
 import { fromEvent } from "rxjs";
 import { XYCoordinates } from "./coordinates";
+import { SourceTile } from "./SourceTile";
 import { Tile } from "./Tile";
 
 const TICK_DURATION_MS = 100;
@@ -7,18 +8,19 @@ const TICK_DURATION_MS = 100;
 export class Game {
     private canvas = document.createElement("canvas");
     private context: CanvasRenderingContext2D;
-    private numberOfHorizontalTiles = 24;
-    private numberOfVerticalTiles = 24;
+    private numberOfHorizontalTiles = 4;
+    private numberOfVerticalTiles = 4;
     private tileSize: {
         width: number;
         height: number;
     };
-    private tilemap: Tile[][] = [];
+    private tilemap: (SourceTile | Tile)[][] = [];
 
     constructor() {
         this.updateCanvasSize();
         this.context = this.canvas.getContext("2d");
         this.tilemap = this.createTilemap();
+        this.setNeighbours();
         document.body.insertBefore(this.canvas, document.getElementById("main"));
         fromEvent(window, "resize").subscribe(this.updateCanvasSize);
         fromEvent(this.canvas, "click").subscribe(this.onCanvasClick);
@@ -34,11 +36,12 @@ export class Game {
     };
 
     private createTilemap = () => {
-        const tilemap: Tile[][] = [];
-        [...Array(this.numberOfHorizontalTiles)].map((_, horizontalIndex) => {
+        const tilemap: (Tile | SourceTile)[][] = [];
+        [...Array(this.numberOfHorizontalTiles)].forEach((_, horizontalIndex) => {
             tilemap[horizontalIndex] = [];
-            [...Array(this.numberOfVerticalTiles)].map((_, verticalIndex) => {
-                tilemap[horizontalIndex][verticalIndex] = new Tile(
+            [...Array(this.numberOfVerticalTiles)].forEach((_, verticalIndex) => {
+                const TileClass = verticalIndex === 0 ? SourceTile : Tile;
+                tilemap[horizontalIndex][verticalIndex] = new TileClass(
                     {
                         x: horizontalIndex * this.tileSize.width,
                         y: verticalIndex * this.tileSize.height,
@@ -51,6 +54,25 @@ export class Game {
         return tilemap;
     };
 
+    private setNeighbours() {
+        this.tilemap.forEach((_, horizontalIndex) => {
+            this.tilemap[horizontalIndex].forEach((_, verticalIndex) => {
+                this.tilemap[horizontalIndex][verticalIndex].setNeighbourTiles({
+                    top: verticalIndex > 0 ? this.tilemap[horizontalIndex][verticalIndex - 1] : undefined,
+                    bottom:
+                        verticalIndex < this.tilemap[horizontalIndex].length - 1
+                            ? this.tilemap[horizontalIndex][verticalIndex + 1]
+                            : undefined,
+                    left: horizontalIndex > 0 ? this.tilemap[horizontalIndex - 1][verticalIndex] : undefined,
+                    right:
+                        horizontalIndex < this.tilemap.length - 1
+                            ? this.tilemap[horizontalIndex + 1][verticalIndex]
+                            : undefined,
+                });
+            });
+        });
+    }
+
     private onCanvasClick = (event: MouseEvent) => {
         const canvasRect = this.canvas.getBoundingClientRect();
         const clickCoordinates = {
@@ -58,9 +80,9 @@ export class Game {
             y: event.clientY - canvasRect.top,
         } as XYCoordinates;
         this.tilemap.forEach((layer) =>
-            layer.forEach((pipe) => {
-                if (pipe.contains(clickCoordinates)) {
-                    pipe.onClick();
+            layer.forEach((tile) => {
+                if (tile.contains(clickCoordinates)) {
+                    tile.onClick();
                 }
             })
         );
@@ -68,7 +90,7 @@ export class Game {
 
     private update = () => {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.tilemap.forEach((layer) => layer.forEach((pipe) => pipe.draw(this.context)));
+        this.tilemap.forEach((layer) => layer.forEach((tile) => tile.update(this.context)));
     };
 
     start = () => {
