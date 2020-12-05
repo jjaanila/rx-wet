@@ -1,38 +1,40 @@
 {
-    "name": "rx-wet",
-    "version": "1.0.0",
-    "description": "Watery RxJs experiments",
-    "main": "index.js",
-    "scripts": {
-        "start": "npx parcel index.html",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+ssh://git@github.com/jjaanila/rx-wet.git"
-    },
-    "keywords": [
-        "RxJs"
-    ],
-    "author": "Janne Jaanila",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/jjaanila/rx-wet/issues"
-    },
-    "homepage": "https://github.com/jjaanila/rx-wet#readme",
-    "devDependencies": {
-        "@types/webpack": "^4.41.25",
-        "awesome-typescript-loader": "^5.2.1",
-        "clean-webpack-plugin": "^3.0.0",
-        "html-webpack-plugin": "^4.5.0",
-        "source-map-loader": "^1.1.3",
-        "ts-node": "^9.1.0",
-        "typescript": "^4.0.3",
-        "webpack": "^4.44.2",
-        "webpack-cli": "^4.2.0",
-        "webpack-dev-server": "^3.11.0"
-    },
-    "dependencies": {
-        "rxjs": "^6.6.3"
-    }
+  "name": "rx-wet",
+  "version": "1.0.0",
+  "description": "Watery RxJs experiments",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve -hot",
+    "build:dev": "webpack --mode development",
+    "build:prod": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jjaanila/rx-wet.git"
+  },
+  "keywords": [
+    "RxJs"
+  ],
+  "author": "Janne Jaanila",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jjaanila/rx-wet/issues"
+  },
+  "homepage": "https://github.com/jjaanila/rx-wet#readme",
+  "devDependencies": {
+    "@types/webpack": "^4.41.25",
+    "awesome-typescript-loader": "^5.2.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^4.5.0",
+    "source-map-loader": "^1.1.3",
+    "ts-node": "^9.1.0",
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "rxjs": "^6.6.3"
+  }
 }

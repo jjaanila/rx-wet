@@ -1,11 +1,17 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const distDir = path.join(__dirname, 'dist');
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
   entry: path.resolve(__dirname, './src/index.ts'),
   devtool: 'inline-source-map',
+  devServer: {
+    contentBase: distDir,
+    compress: true,
+    port: 3000,
+  },
   module: {
     rules: [
       {
@@ -35,11 +41,11 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({
       template: path.resolve(__dirname, './src/index.html'),
-      filename: path.resolve(__dirname, './dist/index.html'),
+      filename: path.resolve(distDir, 'index.html'),
     }),
   ],
   output: {
     filename: 'bundle.[hash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: distDir,
   },
 };
