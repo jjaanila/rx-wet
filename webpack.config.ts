@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const distDir = path.join(__dirname, 'dist');
 
@@ -42,6 +43,9 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: path.resolve(__dirname, './src/index.html'),
       filename: path.resolve(distDir, 'index.html'),
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: 'static', to: '.' }],
     }),
   ],
   output: {
