@@ -4,9 +4,11 @@
   "description": "Watery RxJs experiments",
   "main": "index.js",
   "scripts": {
-    "start": "node src/server.js",
     "build:dev": "webpack --mode development",
     "build:prod": "webpack --mode production",
+    "dev": "webpack serve --hot",
+    "postinstall": "npm run build:prod",
+    "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
